@@ -2,20 +2,34 @@ package com.mju.insta.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mju.insta.model.Follow;
 import com.mju.insta.model.Image;
 import com.mju.insta.model.Likes;
 import com.mju.insta.model.User;
+import com.mju.insta.repository.UserRepository;
 
 @Controller
 public class TestController {
-
+	
+	@Autowired // 의존성 주입
+	private UserRepository mUserRepository;
+	
+	@GetMapping("/test/user/{id}")
+	public @ResponseBody User testUser(@PathVariable int id) {
+		Optional<User> oUser = mUserRepository.findById(id);
+		User user = oUser.get();
+		return user;
+	}
+	
 	@GetMapping("/test/home")
 	public String testHome() {
 		return "home";
@@ -199,4 +213,5 @@ public class TestController {
 	public String testExplore() {
 		return "image/explore";
 	}
+	
 }

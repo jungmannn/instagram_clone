@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.mju.insta.model.User;
@@ -46,5 +47,15 @@ public class UserController {
 		
 		mUserRepository.save(user);
 		return "redirect:/auth/login";
+	}
+	
+	@GetMapping("/user/{id}")
+	public String profile(@PathVariable int id) {
+		
+		// id를 통해서 해당 유저를 검색(이미지 + 유저 정보)
+		
+		
+		
+		return "user/profile";
 	}
 }
