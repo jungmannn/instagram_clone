@@ -28,7 +28,16 @@
             <span class="explore__username">${follow.toUser.username}</span>
           </div>
         </div>
-        <button calss = "following_btn">팔로잉</button>
+        <c:if test="${principal.user.id ne follow.toUser.id}">
+	        <c:choose>
+	        	<c:when test="${follow.followState eq true}">
+	        		<button onClick="follow(false, ${follow.toUser.id})" class = "following_btn">팔로잉</button>
+	        	</c:when>
+	        	<c:otherwise>
+	        		<button onClick="follow(true, ${follow.toUser.id})" class = "follow_btn">팔로우</button>
+	        	</c:otherwise>
+	        </c:choose>
+        </c:if>
       </li>
      </c:forEach>
   

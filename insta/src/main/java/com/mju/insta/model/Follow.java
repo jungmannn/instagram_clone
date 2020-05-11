@@ -38,10 +38,14 @@ public class Follow {
 	private User toUser;
 	
 	@Transient
-	private boolean matpal;
+	private boolean fromUsermatpal;
+	
+	@Transient
+	private boolean principalMatpal;
 	
 	@CreationTimestamp // 자동으로 현재 시간이 세팅
 	private Timestamp createDate;
 	@CreationTimestamp
 	private Timestamp updateDate;
+	
 }
