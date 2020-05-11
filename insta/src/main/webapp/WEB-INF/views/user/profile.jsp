@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +12,6 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="shortcut icon" href="/images/favicon.ico">
   <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/modal.css">
   
 </head>
 
@@ -27,33 +27,40 @@
       </div>
       <div class="profile__info">
         <div class="profile__title">
-          <h1>jungmannn</h1>
-          <a href="edit-profile.html">
-            <button class="profile_follow_btn">팔로우</button>
-          </a>
-          <a href="edit-profile.html">
-            <button class = "profile_edit_btn">Edit Profile</button>
-          </a>
-          <i class="fa fa-cog fa-lg"></i>
+          <h1>${user.username}</h1>
+          <div id="follow_check">
+          	<c:if test="${principal.user.id ne user.id}">
+					<c:choose>
+						<c:when test="${followCheck eq  1}">
+							<button onClick="follow(false, ${user.id})" class="profile_edit_btn">팔로잉</button>
+						</c:when>
+						<c:otherwise>
+							<button onClick="follow(true, ${user.id})" class="profile_follow_btn">팔로우</button>
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+			</div>
+			<c:if test="${principal.user.id eq user.id}">
+	          <a href="/user/edit/${principal.user.id}">
+	            <button class = "profile_edit_btn">Edit Profile</button>
+	          </a>
+	          <i class="fa fa-cog fa-lg"></i>
+          	</c:if>
         </div>
         <ul class="profile__stats">
           <li class="profile__stat">
-            <span class="profile__stat-number">313</span> posts
+            <span class="profile__stat-number">313 </span> 게시물
           </li>
           <li class="profile__stat">
-            <span class="profile__stat-number">4,444</span> followers
+            <span class="profile__stat-number">4,444 </span><a href="/follow/follower/${user.id}" >팔로워</a>
           </li>
           <li class="profile__stat">
-            <span class="profile__stat-number">44</span> following
+            <span class="profile__stat-number">44 </span></span><a href="/follow/follow/${user.id}" >팔로우</a>
           </li>
         </ul>
         <p class="profile__bio">
-          <span class="profile__fullname">Nicolás Serrano Arévalo</span>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Voluptas repellendus cumque quo voluptatum voluptatem,
-          maxime nobis. Quae incidunt cum expedita facilis libero officiis,
-          delectus inventore tempore, ex nulla dolore cumque.
-          <a href="http://serranoarevalo.com" class="profile__link">serranoarevalo.com</a>
+          <span class="profile__fullname">${user.name}</span>${user.bio}
+          <a href="${user.website}" class="profile__link">${user.website}</a>
         </p>
       </div>
     </header>
@@ -183,7 +190,10 @@
       </div>
     </div>
   </main>
+  
   <%@ include file="../include/footer.jsp" %>
+<script src="/js/profile.js"></script>
+	
   <div class="profile__overlay">
     <i class="fa fa-times"></i>
     <div class="profile__overlay-container">

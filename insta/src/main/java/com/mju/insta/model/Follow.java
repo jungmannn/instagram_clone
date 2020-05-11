@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -36,6 +37,7 @@ public class Follow {
 	@JsonIgnoreProperties({"images"})
 	private User toUser;
 	
+	@Transient
 	private boolean matpal;
 	
 	@CreationTimestamp // 자동으로 현재 시간이 세팅

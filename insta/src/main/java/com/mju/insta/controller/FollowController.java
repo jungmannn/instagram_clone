@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,7 +46,7 @@ public class FollowController {
 	}
 	
 	@DeleteMapping("/follow/{id}")
-	public @ResponseBody List<Follow> unFollow(@AuthenticationPrincipal MyUserDetail userDetail, 
+	public @ResponseBody String unFollow(@AuthenticationPrincipal MyUserDetail userDetail, 
 			@PathVariable int id){
 		User fromUser = userDetail.getUser();
 		Optional<User> oToUser = mUserRepository.findById(id);
@@ -53,6 +55,25 @@ public class FollowController {
 		mFollowRepository.deleteByFromUserIdAndToUserId(fromUser.getId(), toUser.getId());
 		
 		List<Follow> follows = mFollowRepository.findAll();
-		return follows;
+		return "ok"; // ResponseEntity 로 수정
+	}
+	
+	@GetMapping("/follow/follower/{id}")
+	public String followFollower(@PathVariable int id, Model model) {
+		
+		//팔로워 리스트
+		List<Follow> followers = mFollowRepository.findByToUserId(id);
+		model.addAttribute("followers", followers);
+		return "follow/follow";
+	}
+
+	@GetMapping("/follow/follow/{id}")
+	public String followFollow(@PathVariable int id, Model model) {
+		
+		//팔로우 리스트
+		List<Follow> follows = mFollowRepository.findByFromUserId(id);
+		model.addAttribute("follows", follows);
+		
+		return "follow/follow";
 	}
 }

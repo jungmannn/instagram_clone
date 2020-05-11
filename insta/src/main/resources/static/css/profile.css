@@ -6,6 +6,11 @@
   font-size: 16px;
 }
 
+.profile__stat a{
+	text-decoration: none;
+	color :black;
+}
+
 #profile .profile__header {
   display: flex;
   justify-content: space-between;
