@@ -55,5 +55,4 @@ public class Image {
 	private Timestamp createDate;
 	@CreationTimestamp
 	private Timestamp updateDate;
-		
 }

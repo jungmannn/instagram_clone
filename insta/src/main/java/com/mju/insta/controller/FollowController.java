@@ -59,12 +59,25 @@ public class FollowController {
 	}
 	
 	@GetMapping("/follow/follower/{id}")
-	public String followFollower(@PathVariable int id, Model model) {
+	public String followFollower(@PathVariable int id, @AuthenticationPrincipal MyUserDetail userDetail, Model model) {
 		
 		//팔로워 리스트
 		List<Follow> followers = mFollowRepository.findByToUserId(id);
+
+		//팔로우 리스트
+		List<Follow> principalFollows = mFollowRepository.findByFromUserId(userDetail.getUser().getId());
+		
+		for(Follow f1 : followers) {
+			for(Follow f2 : principalFollows) {
+				if(f1.getFromUser().getId() == f2.getToUser().getId()) {
+					f1.setFollowState(true);
+				}
+			}
+		}
+		
 		model.addAttribute("followers", followers);
-		return "follow/follow";
+
+		return "follow/follower";
 	}
 
 	@GetMapping("/follow/follow/{id}")

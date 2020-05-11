@@ -38,7 +38,7 @@ public class Follow {
 	private User toUser;
 	
 	@Transient
-	private boolean fromUsermatpal;
+	private boolean followState;
 	
 	@Transient
 	private boolean principalMatpal;
