@@ -15,9 +15,9 @@ public class ImageController {
 	private static final Logger log = LoggerFactory.getLogger(ImageController.class);
 
 	
-	@GetMapping({"/", "/image/feed"})
-	public String imageFeed(@AuthenticationPrincipal MyUserDetail userDetail) {
-		log.info("username : "+userDetail.getUsername());
-		return "image/feed";
-	}
+	//@GetMapping({"/", "/image/feed"})
+	//public String imageFeed(@AuthenticationPrincipal MyUserDetail userDetail) {
+	//	log.info("username : "+userDetail.getUsername());
+	//	return "image/feed";
+	//}
 }
