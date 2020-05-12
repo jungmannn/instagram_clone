@@ -3,7 +3,15 @@
   flex-direction: column;
   align-items: center;
 }
+a:not(.hash__tag){
+	color:black;
+}
+.hash__tag a { text-decoration: none; color: rgba(var(--fe0,0,55,107),1); }
 
+a:visited { text-decoration: none; }
+a:hover { text-decoration: none; }
+a:focus { text-decoration: none; }
+a:hover, a:active { text-decoration: none; }
 .photo {
   margin-bottom: 60px;
 }
@@ -53,6 +61,9 @@
 
 .photo__comment .photo__comment-author {
   font-weight: 600;
+}
+.photo__caption_auth{
+	font-weight: 600;
 }
 
 .photo__comments .photo__comment {

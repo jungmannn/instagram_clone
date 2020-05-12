@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
@@ -15,6 +19,7 @@ import com.mju.insta.model.Follow;
 import com.mju.insta.model.Image;
 import com.mju.insta.model.Likes;
 import com.mju.insta.model.User;
+import com.mju.insta.repository.ImageRepository;
 import com.mju.insta.repository.UserRepository;
 
 @Controller
@@ -22,6 +27,18 @@ public class TestController {
 	
 	@Autowired // 의존성 주입
 	private UserRepository mUserRepository;
+	
+	@Autowired
+	private ImageRepository mImageRepository;
+	
+	@GetMapping("/test/image/feed")
+	public @ResponseBody List<Image> testImageFeed(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+		int userId = 2;
+		
+		Page<Image> images = mImageRepository.findImage(userId, pageable);
+		return images.getContent();
+		
+	}
 	
 	@GetMapping("/test/user/{id}")
 	public @ResponseBody User testUser(@PathVariable int id) {
