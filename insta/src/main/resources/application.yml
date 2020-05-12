@@ -1,6 +1,6 @@
 server:
-#  port: 80
-  port: 8080
+#  port: 8080
+  port: 80
   servlet:
     context-path: /
     
@@ -45,6 +45,7 @@ spring:
       password: 1234
 
 file:
-  path: C:/Users/task1/git/instagram_clone/insta/src/main/resources/upload
-#C:/Users/admin/git/instagram_clone/insta/src/main/resources/upload
-#/Users/jeonghyeon/desktop/springboot-demo-project/insta/src/main/resources/upload
+  path: C:\Users\admin\git\instagram_clone\insta\src\main\resources\static\upload\
+#C:/Users/task1/git/instagram_clone/insta/src/main/resources/static/upload/
+#C:\Users\admin\git\instagram_clone\insta\src\main\resources\static\upload\
+#/Users/jeonghyeon/desktop/springboot-demo-project/insta/src/main/resources/static/upload/
