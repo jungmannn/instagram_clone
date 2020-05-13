@@ -12,12 +12,12 @@
     <link rel="shortcut icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
   <%@ include file="../include/nav.jsp" %>
-  
   <main id="feed">
+  	
     <c:forEach var = "image" items="${images}">
- 
 	    <div class="photo u-default-box">
 	      <header class="photo__header">
 	        <img src="/images/avatar.jpg" />
@@ -61,8 +61,7 @@
     </c:forEach>
   </main>
   <%@ include file="../include/footer.jsp" %>
+  <script src="/js/feed.js"></script>
 
-
-  
 </body>
 </html>
