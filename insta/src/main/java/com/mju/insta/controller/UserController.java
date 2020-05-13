@@ -1,10 +1,17 @@
 package com.mju.insta.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -12,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mju.insta.model.User;
 import com.mju.insta.repository.FollowRepository;
@@ -23,7 +32,9 @@ public class UserController {
 	
 	
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
+	
+	@Value("${file.path}")
+	private String fileRealPath;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
@@ -92,4 +103,25 @@ public class UserController {
 		
 		return "user/profile_edit";
 	}
+	
+	@PostMapping("/user/profileUpload")
+	public String userProfileUpload(
+			@RequestParam("profileImage") MultipartFile file,
+			@AuthenticationPrincipal MyUserDetail userDetail
+			) throws IOException
+	{
+		User principal = userDetail.getUser();
+		
+		UUID uuid = UUID.randomUUID();
+		String uuidFilename = uuid + "_" + file.getOriginalFilename();
+		Path filePath = Paths.get(fileRealPath + uuidFilename);
+		Files.write(filePath, file.getBytes());
+		
+		principal.setProfileImage(uuidFilename);
+		
+		mUserRepository.save(principal);
+		
+		return "redirect:/user/"+principal.getId();
+	}
+	
 }

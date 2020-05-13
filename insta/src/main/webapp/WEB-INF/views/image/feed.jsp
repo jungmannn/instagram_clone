@@ -20,7 +20,7 @@
     <c:forEach var = "image" items="${images}">
 	    <div class="photo u-default-box">
 	      <header class="photo__header">
-	        <img src="/images/avatar.jpg" />
+	        <img src="/upload/${image.user.profileImage}" />
 	        <span class="photo__username">${image.user.username}</span><br>
 	        <span class="photo__username">${image.location}</span><br>
 	      </header>
