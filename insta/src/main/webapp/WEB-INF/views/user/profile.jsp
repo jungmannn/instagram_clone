@@ -20,7 +20,7 @@
 		<header class="profile__header">
 			<div class="avatar__container">
 				
-				<form id="frm_profile_img" action="/user/profileUpload/" method="post" enctype="multipart/form-data">
+				<form id="frm_profile_img" action="/user/profileUpload" method="post" enctype="multipart/form-data">
 					<input type="file" name="profileImage" style="display: none;" />
 				</form>
 				<img src="/upload/${user.profileImage}"  onerror="this.onerror=null; this.src='/images/avatar.jpg'" id="profile_image" style="cursor: pointer" />
@@ -49,15 +49,15 @@
 						<a href="/image/upload">
 							<button class="profile_follow_btn">사진등록</button>
 						</a>
-						<a href="/user/edit/${principal.user.id}">
+						<a href="/user/edit">
 							<button class="profile_edit_btn">회원수정</button>
 						</a> <i class="fa fa-cog fa-lg"></i>
 					</c:if>
 				</div>
 				<ul class="profile__stats">
-					<li class="profile__stat"><span class="profile__stat-number">313</span> 게시물</li>
-					<li class="profile__stat"><span class="profile__stat-number">4,444 </span><a href="/follow/follower/${user.id}">팔로워</a></li>
-					<li class="profile__stat"><span class="profile__stat-number">44 </span><a href="/follow/follow/${user.id}">팔로우</a></li>
+					<li class="profile__stat"><span class="profile__stat-number">${imageCount} </span> 게시물</li>
+					<li class="profile__stat"><span class="profile__stat-number">${followerCount} </span><a href="/follow/follower/${user.id}">팔로워</a></li>
+					<li class="profile__stat"><span class="profile__stat-number">${followCount} </span><a href="/follow/follow/${user.id}">팔로우</a></li>
 				</ul>
 				<div class="profile__bio">
 					<p class="profile__fullname">${user.name }</p>					
@@ -70,27 +70,15 @@
 		<div class="profile__photo-grid">
 				
 				<!-- 첫줄 -->
-				<div class="profile__photo">
-					<a href="image-detail.html"> <img src="/images/feedPhoto.jpg"></a>
-					<div class="profile__photo-overlay">
-						<span class="profile__photo-stat"> <i class="fa fa-heart"></i> 504</span> 
-						<span class="profile__photo-stat"> <i class="fa fa-comment"></i> 22</span>
+				<c:forEach var="image" items="${user.images}">
+					<div class="profile__photo">
+						<a href="image-detail.html"> <img src="/upload/${image.postImage}"></a>
+						<div class="profile__photo-overlay">
+							<span class="profile__photo-stat"> <i class="fa fa-heart"></i> ${image.likeCount }</span> 
+							<span class="profile__photo-stat"> <i class="fa fa-comment"></i> 22</span>
+						</div>
 					</div>
-				</div>
-				<div class="profile__photo">
-					<a href="image-detail.html"> <img src="/images/feedPhoto.jpg"></a>
-					<div class="profile__photo-overlay">
-						<span class="profile__photo-stat"> <i class="fa fa-heart"></i> 504</span> 
-						<span class="profile__photo-stat"> <i class="fa fa-comment"></i> 22</span>
-					</div>
-				</div>
-				<div class="profile__photo">
-					<a href="image-detail.html"> <img src="/images/feedPhoto.jpg"></a>
-					<div class="profile__photo-overlay">
-						<span class="profile__photo-stat"> <i class="fa fa-heart"></i> 504</span> 
-						<span class="profile__photo-stat"> <i class="fa fa-comment"></i> 22</span>
-					</div>
-				</div>
+				</c:forEach>
 				
 		</div>
 	</main>
@@ -100,7 +88,7 @@
 		<div class="profile__overlay-container">
 			<a href="#" class="profile__overlay-link">Change password</a> <a href="#"
 				class="profile__overlay-link">Authorize Apps</a> <a href="#" class="profile__overlay-link">Notifications</a>
-			<a href="#" class="profile__overlay-link" id="logout">Log Out</a> <a href="#"
+			<a href="/logout" class="profile__overlay-link" id="logout">Log Out</a> <a href="#"
 				class="profile__overlay-link" id="cancel">Cancel</a>
 		</div>
 	</div>

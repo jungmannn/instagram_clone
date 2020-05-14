@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -19,15 +20,18 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mju.insta.model.Image;
+import com.mju.insta.model.Likes;
 import com.mju.insta.model.Tag;
 import com.mju.insta.model.User;
 import com.mju.insta.repository.ImageRepository;
+import com.mju.insta.repository.LikesRepository;
 import com.mju.insta.repository.TagRepository;
 import com.mju.insta.service.MyUserDetail;
 import com.mju.insta.util.Utils;
@@ -46,6 +50,39 @@ public class ImageController {
 	@Autowired
 	private TagRepository mTagRepository;
 	
+	@Autowired
+	private LikesRepository mLikesRepository;
+	
+	@PostMapping("/image/like/{id}")
+	public @ResponseBody String imageLike(
+			@PathVariable int id,
+			@AuthenticationPrincipal MyUserDetail userDetail
+			) {
+		
+		Likes oldLike = mLikesRepository.findByUserIdAndImageId(userDetail.getUser().getId(), id);
+		
+		Optional<Image> oImage = mImageRepository.findById(id);
+		Image image = oImage.get();
+		
+		try {
+			if(oldLike == null) { // 좋아요 안한 상태(추가)
+				Likes newLike = Likes.builder()
+						.image(image)
+						.user(userDetail.getUser())
+						.build();
+				mLikesRepository.save(newLike);
+			}else { //좋아요 한 상태(삭제)
+				mLikesRepository.delete(oldLike);
+			}
+			return "ok";
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		return "fail";
+	}
+	
+	
 	@GetMapping({"/", "/image/feed"})
 	public String imageFeed(
 			@AuthenticationPrincipal MyUserDetail userDetail,
@@ -59,7 +96,17 @@ public class ImageController {
 		Page<Image> pageImages = mImageRepository.findImage(userDetail.getUser().getId(), pageable);
 		
 		List<Image> images = pageImages.getContent();
+		
+		
+		for(Image image : images) {
+			Likes like = mLikesRepository.findByUserIdAndImageId(userDetail.getUser().getId(), image.getId());
+			
+			if(like != null) {
+				image.setHeart(true);
+			}
+		}
 		model.addAttribute("images", images);
+		
 		return "image/feed";
 	}
 	
@@ -123,6 +170,15 @@ public class ImageController {
 		Page<Image> pageImages = mImageRepository.findImage(userDetail.getUser().getId(), pageable);
 		
 		List<Image> images = pageImages.getContent();
+		
+		for(Image image : images) {
+			Likes like = mLikesRepository.findByUserIdAndImageId(userDetail.getUser().getId(), image.getId());
+			
+			if(like != null) {
+				image.setHeart(true);
+			}
+		}
+		
 		return images;
 	}
 }

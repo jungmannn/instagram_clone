@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,11 +18,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mju.insta.model.Image;
 import com.mju.insta.model.User;
 import com.mju.insta.repository.FollowRepository;
+import com.mju.insta.repository.LikesRepository;
 import com.mju.insta.repository.UserRepository;
 import com.mju.insta.service.MyUserDetail;
 
@@ -44,6 +46,9 @@ public class UserController {
 	
 	@Autowired
 	private FollowRepository mFollowRepository;
+	
+	@Autowired
+	private LikesRepository mLikesRepository;
 	
 	@GetMapping("/auth/login")
 	public String authLogin() {
@@ -83,6 +88,29 @@ public class UserController {
 		// 4번 임시(수정해야함)
 		Optional<User> oUser = mUserRepository.findById(id);
 		User user = oUser.get();
+
+		
+		// 1번 iamge Count
+		int imageCount = user.getImages().size();
+		model.addAttribute("imageCount", imageCount);
+		
+		// 2번 follow count
+		// select count(*) from follow where fromUserId = ?
+		int followCount = mFollowRepository.countByFromUserId(user.getId());
+		model.addAttribute("followCount", followCount);
+		
+		// 3번 follower count
+		// select count(*) from follower where toUserId = ?
+		int followerCount = mFollowRepository.countByToUserId(user.getId());
+		model.addAttribute("followerCount", followerCount);
+		
+		// 4번 like count
+		for(Image item : user.getImages()) {
+			int likeCount = mLikesRepository.countByImageId(item.getId());
+			item.setLikeCount(likeCount);
+		}
+		
+		//Collections.sort(user.getImages());
 		model.addAttribute("user", user);
 		
 		
@@ -96,10 +124,13 @@ public class UserController {
 		return "user/profile";
 	}
 	
-	@GetMapping("user/edit/{id}")
-	public String userEdit(@PathVariable int id) {
-		// 해당 ID로 Select 해서 수정
-		// findByUserInfo() 사용 (만들어야함)
+	@GetMapping("/user/edit")
+	public String userEdit(@AuthenticationPrincipal MyUserDetail userDetail, Model model) {
+		
+		Optional<User> oUser = mUserRepository.findById(userDetail.getUser().getId());
+		User user = oUser.get();
+		
+		model.addAttribute("user", user);
 		
 		return "user/profile_edit";
 	}
@@ -112,16 +143,49 @@ public class UserController {
 	{
 		User principal = userDetail.getUser();
 		
+		//파일 처리
 		UUID uuid = UUID.randomUUID();
 		String uuidFilename = uuid + "_" + file.getOriginalFilename();
-		Path filePath = Paths.get(fileRealPath + uuidFilename);
+		Path filePath = Paths.get(fileRealPath+uuidFilename);
 		Files.write(filePath, file.getBytes());
 		
-		principal.setProfileImage(uuidFilename);
+		//영속화
+		Optional<User> oUser = mUserRepository.findById(principal.getId());
+		User user = oUser.get();
 		
-		mUserRepository.save(principal);
+		//값 변경
+		user.setProfileImage(uuidFilename);
+		
+		//재영속화 및 저장
+		mUserRepository.save(user);
+		
 		
 		return "redirect:/user/"+principal.getId();
+	}
+	
+	@PostMapping("/user/editProc")
+	public String userEditProc(
+			User requestUser,
+			@AuthenticationPrincipal MyUserDetail userDetail
+			) {
+		//영속화
+		Optional<User> oUser = mUserRepository.findById(userDetail.getUser().getId());
+		User user = oUser.get();
+		
+		//값 변경
+		user.setName(requestUser.getName());
+		user.setUsername(requestUser.getUsername());
+		user.setWebsite(requestUser.getWebsite());
+		user.setBio(requestUser.getBio());
+		user.setEmail(requestUser.getEmail());
+		user.setPhone(requestUser.getPhone());
+		user.setGender(requestUser.getGender());
+		
+		//다시 영속화 및 Flush
+		mUserRepository.save(user);
+		
+		return "redirect:/user/"+userDetail.getUser().getId();
+		
 	}
 	
 }

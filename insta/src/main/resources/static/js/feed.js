@@ -10,7 +10,7 @@ $(window).scroll(function() {
 function make_feed_box(image){
     let feed_box = `<div class="photo u-default-box">`;
 	feed_box += `<header class="photo__header">`;	
-	feed_box += `<img src="/upload/${image.user.profileImage}" />`;
+	feed_box += `<img src="/upload/${image.user.profileImage}" onerror="this.onerror=null; this.src='/images/avatar.jpg'"/>`;
 	feed_box += `<div class="photo_user_info">`;
 	feed_box += `<span class="photo__username">${image.user.username}</span>`;
 	feed_box += `<span class="photo__location">${image.location}</span></div></header>`;
@@ -19,9 +19,9 @@ function make_feed_box(image){
 	feed_box += `<div class="photo__info"><div class="photo__actions"><span class="photo__action">`;
 	
 	if(image.heart == true){
-		feed_box += `<i id="${image.id}" class="fa fa-heart heart heart-clicked"></i>`;
+		feed_box += `<i onclick="onFeedLoad(${image.id})" id="${image.id}" class="fa fa-heart heart heart-clicked"></i>`;
 	}else{
-		feed_box += `<i id="${image.id}" class="fa fa-heart-o heart"></i>`;
+		feed_box += `<i onclick="onFeedLoad(${image.id})" id="${image.id}" class="fa fa-heart-o heart"></i>`;
 	}
 		
 	feed_box += `</span> <span class="photo__action">`;
@@ -51,6 +51,8 @@ async function load_feed_box(){
 	// fetch 로 다운로드
 	let response = await fetch(`/image/feed/scroll?page=${page}`);
 	let images = await response.json();
+	
+	console.log(images);
 	
 	// 3번 실행 필요
 	images.forEach(function(image){
