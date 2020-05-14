@@ -181,4 +181,22 @@ public class ImageController {
 		
 		return images;
 	}
+	
+	@GetMapping("/image/explore")
+	public String imageExplore(
+			@AuthenticationPrincipal MyUserDetail userDetail,
+			Model model
+			)
+	{
+	
+//		Page<Image> pageImages = mImageRepository.findAllImage(pageable);
+//		
+//		List<Image> images = pageImages.getContent();
+		
+		List<Image> images = mImageRepository.findAllImage();
+		
+		model.addAttribute("images", images);
+		
+		return "image/explore";
+	}
 }

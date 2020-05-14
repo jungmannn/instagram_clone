@@ -11,7 +11,7 @@
 	<a href="/"> <img src="/images/logo.png" />
 	</a> <input type="text" placeholder="Search">
 	<div class="navigation__links">
-		<a href="/image/explore/${principal.user.id}" class="navigation__link"> 
+		<a href="/image/explore" class="navigation__link"> 
 			<i class="fa fa-compass"></i>
 		</a> 
 		<a href="#" class="navigation__link like_popup"> 

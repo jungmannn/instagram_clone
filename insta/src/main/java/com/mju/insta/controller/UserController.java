@@ -74,6 +74,35 @@ public class UserController {
 		return "redirect:/auth/login";
 	}
 	
+
+	@GetMapping("/auth/password")
+	public String authPassword() {
+		return "auth/password";
+	}
+	
+	@PostMapping("/auth/passwordProc")
+	public String authPasswordProc(@AuthenticationPrincipal MyUserDetail userDetail) {
+		User principal = userDetail.getUser();
+		
+		// 비밀번호 == DB 인코딩된 비밀번호 체크방법 강구 2020.05.14
+		String oldPassword = principal.getPassword();
+		String oldPasswordCheck = "비밀번호 체크";
+		if(oldPassword.equals(oldPasswordCheck)) {
+			//암호 변경
+			String newPassword = "받아오는 비밀번호";
+			//새 비밀번호 인코딩
+			String encNewPassword = encoder.encode(newPassword);
+			principal.setPassword(encNewPassword);
+			mUserRepository.save(principal);
+		}
+		else {
+			return "/auth/notMatchedPassword";
+		}
+		
+		return "redirect:/user/"+ principal.getId();
+	}
+	
+	
 	@GetMapping("/user/{id}")
 	public String profile(@PathVariable int id, @AuthenticationPrincipal MyUserDetail userDetail, Model model) {
 		// id를 통해서 해당 유저를 검색(이미지 + 유저 정보)
