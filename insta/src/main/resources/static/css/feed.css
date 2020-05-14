@@ -21,7 +21,7 @@ a:hover, a:active { text-decoration: none; }
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .photo__header img {
@@ -106,4 +106,15 @@ a:hover, a:active { text-decoration: none; }
 .heart-clicked {
   color: red;
   animation: .5s pump infinite linear;
+}
+.photo__location{
+	max-width: 100%;
+    /* color: #8e8e8e;
+    color: rgba(var(--f52,142,142,142),1); */
+    line-height: 15px;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
 }

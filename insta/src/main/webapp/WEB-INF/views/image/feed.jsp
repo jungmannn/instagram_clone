@@ -20,9 +20,13 @@
     <c:forEach var = "image" items="${images}">
 	    <div class="photo u-default-box">
 	      <header class="photo__header">
-	        <img src="/upload/${image.user.profileImage}" onerror="this.onerror=null; this.src='/images/avatar.jpg'"/>
-	        <span class="photo__username">${image.user.username}</span><br>
-	        <span class="photo__username">${image.location}</span><br>
+	      	<div>
+	      		<img src="/upload/${image.user.profileImage}" onerror="this.onerror=null; this.src='/images/avatar.jpg'"/>
+	      	</div>
+	      	<div>
+		        <span class="photo__username">${image.user.username}</span><br>
+		        <span class="photo__location">${image.location}</span><br>
+	        </div>
 	      </header>
 	      <img src="/upload/${image.postImage}" />
 	      <div class="photo__info">

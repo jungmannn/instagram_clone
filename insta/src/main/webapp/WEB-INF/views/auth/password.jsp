@@ -14,38 +14,29 @@
 </head>
 <body>
   <main id="login">
-    <div class="login__column">
-      <img src="/images/phoneImage.png" />
-    </div>
-    <div class="login__column">
+    
+    <div class="password__column">
       <div class="login__box">
-        <img src="/images/loginLogo.png" />
+        <a href="/"><img src="/images/loginLogo.png"></a>
         <form action="/auth/passwordProc" method="post" class="login__form">
-          <input type="email" name="email" placeholder="Email" required>
-          <input type="text" name="name" placeholder="Name" required>
-          <input type="text" name="username" placeholder="Username" required>
-          <input type="password" name="password" placeholder="Password" required>
-          <input type="submit" value="Sign up">
+          <input type="password" name="password" placeholder="기존 비밀번호" required="">
+          <input type="password" name="password" placeholder="새 비밀번호" required="">
+          <input type="password" name="passwordCheck" placeholder="새 비밀번호 확인" required="">
+          <input type="submit" value="변경">
         </form>
         <span class="login__divider">
           or
         </span>
-        <a href="http://facebook.com" class="login__fb-link"><i class="fa fa-facebook-square"></i> Log in with Facebook</a>
         <a href="#" class="login__small-link">Forgot password?</a>
       </div>
-      <div class="login__box">
-        <span class="login__text">
-          Don't have an account? <br />
-        </span>
-        <a class="login__blue-link" href="#">Sign up</a>
-      </div>
+      
       <div class="login__t-box">
         <span class="login__text">
           Get the app.
         </span>
         <div class="login__appstores">
-          <img src="/images/ios.png" class="login__appstore" />
-          <img src="/images/android.png" class="login__appstore" />
+          <img src="/images/ios.png" class="login__appstore">
+          <img src="/images/android.png" class="login__appstore">
         </div>
       </div>
     </div>
